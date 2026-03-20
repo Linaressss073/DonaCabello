@@ -66,6 +66,11 @@ export function Footer() {
                   Política de privacidad
                 </a>
               </li>
+              <li>
+                <Link to="/index" className="text-gray-600 hover:text-pink-600">
+                  Mapa del sitio
+                </Link>
+              </li>
             </ul>
           </div>
 

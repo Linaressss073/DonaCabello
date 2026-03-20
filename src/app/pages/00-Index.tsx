@@ -23,26 +23,24 @@ export default function Index() {
           <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-pink-600 to-purple-600 bg-clip-text text-transparent">
             DonaCabello
           </h1>
-          <p className="text-xl text-gray-600 mb-2">Prototipo NO funcional - Pantallas estáticas</p>
-          <p className="text-sm text-gray-500">11 frames para navegación</p>
+          <p className="text-xl text-gray-600 mb-2">Mapa del sitio — 11 pantallas</p>
+          <p className="text-sm text-gray-500">Todas las páginas conectadas a la capa de API</p>
         </div>
 
         <Card className="mb-8 bg-white/80 backdrop-blur">
           <CardHeader>
-            <CardTitle>Información del prototipo</CardTitle>
+            <CardTitle>Estado del proyecto</CardTitle>
             <CardDescription>
-              Este prototipo muestra las 11 pantallas solicitadas para DonaCabello, una plataforma 
-              que conecta donantes con centros estéticos aliados verificados para donar cabello 
-              a pacientes oncológicos en Colombia.
+              Plataforma para conectar donantes de cabello con centros estéticos aliados verificados
+              para apoyar a pacientes oncológicos en Colombia.
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-2 text-sm">
-              <p><strong>Estilo:</strong> Moderno, limpio, accesible, sans-serif</p>
-              <p><strong>Resolución:</strong> Desktop 1440px (responsive adaptable)</p>
-              <p><strong>Elementos comunes:</strong> Header fijo, Footer, Menú principal, Bloque "¿Qué hace esta opción?"</p>
-              <p><strong>Microcopy clave:</strong> "Centros aliados verificados", "Guía estandarizada", 
-              "No recolectamos datos de salud", "Validación final la realiza el centro aliado"</p>
+              <p><strong>Stack:</strong> React 18 + Vite + TypeScript + Tailwind CSS v4 + shadcn/ui</p>
+              <p><strong>API:</strong> Capa lista con mock data — cambiar <code className="bg-gray-100 px-1 rounded">VITE_USE_MOCK=false</code> para conectar al backend real</p>
+              <p><strong>Backend planeado:</strong> NestJS + MongoDB + microservicios (arquitectura hexagonal) + JWT Bearer</p>
+              <p><strong>Microcopy clave:</strong> "Centros aliados verificados" · "Guía estandarizada" · "No recolectamos datos de salud"</p>
             </div>
           </CardContent>
         </Card>
@@ -68,8 +66,8 @@ export default function Index() {
         </div>
 
         <div className="mt-12 text-center text-sm text-gray-500">
-          <p>Desarrollado para Figma Make</p>
-          <p className="mt-1">Todas las pantallas incluyen navegación completa mediante el header</p>
+          <p>Accesible desde el Footer → "Mapa del sitio"</p>
+          <p className="mt-1">Todas las páginas incluyen Header fijo, Footer y navegación completa</p>
         </div>
       </div>
     </div>

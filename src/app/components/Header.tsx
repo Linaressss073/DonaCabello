@@ -14,6 +14,7 @@ export function Header() {
     { label: "Campañas", href: "/campanas" },
     { label: "Comunidad y Apoyo", href: "/comunidad/faq" },
     { label: "Para Centros", href: "/centros/panel" },
+    { label: "Menú completo", href: "/mega-menu" },
   ];
 
   return (
