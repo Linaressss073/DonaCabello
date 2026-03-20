@@ -1,1 +1,31 @@
-backend/
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+npm-debug.log*
+
+# Editor
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# NestJS
+backend/dist/
+backend/node_modules/
+
+# Frontend (Vite)
+frontend/dist/
+frontend/node_modules/
