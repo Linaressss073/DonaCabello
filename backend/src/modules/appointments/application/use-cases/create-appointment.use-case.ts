@@ -11,6 +11,12 @@ export class CreateAppointmentUseCase implements CreateAppointmentPort {
   ) {}
 
   async execute(command: CreateAppointmentCommand): Promise<AppointmentEntity> {
-    throw new Error('Not implemented');
+    const appointment = new AppointmentEntity();
+    appointment.donorId = command.donorId;
+    appointment.centerId = command.centerId;
+    appointment.scheduledAt = command.scheduledAt;
+    appointment.status = 'pending';
+    appointment.notes = command.notes ?? '';
+    return this.appointmentsRepository.save(appointment);
   }
 }

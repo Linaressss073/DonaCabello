@@ -4,7 +4,7 @@ export interface LoginCommand {
 }
 
 export interface LoginResult {
-  accessToken: string;
+  access_token: string;
   user: {
     id: string;
     email: string;

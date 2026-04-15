@@ -8,7 +8,7 @@ export interface RegisterCommand {
 }
 
 export interface RegisterResult {
-  accessToken: string;
+  access_token: string;
   user: {
     id: string;
     email: string;

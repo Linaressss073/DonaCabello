@@ -10,6 +10,12 @@ export class SendContactUseCase implements SendContactPort {
   ) {}
 
   async execute(command: SendContactCommand): Promise<void> {
-    throw new Error('Not implemented');
+    await this.communityRepository.saveContact({
+      id: '',
+      name: command.name,
+      email: command.email,
+      message: command.message,
+      createdAt: new Date(),
+    });
   }
 }

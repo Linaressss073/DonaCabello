@@ -13,7 +13,39 @@ export class MongooseCommunityRepository implements CommunityRepositoryPort {
     @InjectModel(ContactDocument.name) private readonly contactModel: Model<ContactDocument>,
   ) {}
 
-  async findFaqs(): Promise<FaqEntity[]> { throw new Error('Not implemented'); }
-  async findMyths(): Promise<MythEntity[]> { throw new Error('Not implemented'); }
-  async saveContact(message: ContactMessageEntity): Promise<ContactMessageEntity> { throw new Error('Not implemented'); }
+  async findFaqs(): Promise<FaqEntity[]> {
+    const docs = await this.faqModel.find().sort({ order: 1 }).exec();
+    return docs.map((doc) => ({
+      id: (doc._id as any).toString(),
+      question: doc.question,
+      answer: doc.answer,
+      order: doc.order,
+    }));
+  }
+
+  async findMyths(): Promise<MythEntity[]> {
+    const docs = await this.mythModel.find().sort({ order: 1 }).exec();
+    return docs.map((doc) => ({
+      id: (doc._id as any).toString(),
+      myth: doc.myth,
+      reality: doc.reality,
+      order: doc.order,
+    }));
+  }
+
+  async saveContact(message: ContactMessageEntity): Promise<ContactMessageEntity> {
+    const created = new this.contactModel({
+      name: message.name,
+      email: message.email,
+      message: message.message,
+    });
+    const saved = await created.save();
+    return {
+      id: (saved._id as any).toString(),
+      name: saved.name,
+      email: saved.email,
+      message: saved.message,
+      createdAt: (saved as any).createdAt,
+    };
+  }
 }

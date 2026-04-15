@@ -5,17 +5,24 @@ import { CreateAppointmentUseCase } from './application/use-cases/create-appoint
 import { GetMyAppointmentsUseCase } from './application/use-cases/get-my-appointments.use-case';
 import { MongooseAppointmentsRepository } from './infrastructure/adapters/out/persistence/mongoose-appointments.repository';
 import { AppointmentDocument, AppointmentSchema } from './infrastructure/adapters/out/persistence/schemas/appointment.schema';
+import { CenterDocument, CenterSchema } from '../centers/infrastructure/adapters/out/persistence/schemas/center.schema';
 import { APPOINTMENTS_REPOSITORY_PORT } from './domain/ports/out/appointments-repository.port';
 import { CREATE_APPOINTMENT_PORT } from './domain/ports/in/create-appointment.port';
 import { GET_MY_APPOINTMENTS_PORT } from './domain/ports/in/get-my-appointments.port';
 
 @Module({
-  imports: [MongooseModule.forFeature([{ name: AppointmentDocument.name, schema: AppointmentSchema }])],
+  imports: [
+    MongooseModule.forFeature([
+      { name: AppointmentDocument.name, schema: AppointmentSchema },
+      { name: CenterDocument.name, schema: CenterSchema },
+    ]),
+  ],
   controllers: [AppointmentsController],
   providers: [
     { provide: APPOINTMENTS_REPOSITORY_PORT, useClass: MongooseAppointmentsRepository },
     { provide: CREATE_APPOINTMENT_PORT, useClass: CreateAppointmentUseCase },
     { provide: GET_MY_APPOINTMENTS_PORT, useClass: GetMyAppointmentsUseCase },
   ],
+  exports: [APPOINTMENTS_REPOSITORY_PORT],
 })
 export class AppointmentsModule {}

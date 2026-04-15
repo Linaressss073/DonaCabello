@@ -1,10 +1,13 @@
-import { Search, Menu, Heart } from "lucide-react";
-import { Link } from "react-router";
+import { Search, Menu, Heart, LogOut, User } from "lucide-react";
+import { Link, useNavigate } from "react-router";
 import { Button } from "./ui/button";
 import { useState } from "react";
+import { useAuth } from "../context/AuthContext";
 
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
   const menuItems = [
     { label: "Inicio", href: "/" },
@@ -16,6 +19,11 @@ export function Header() {
     { label: "Para Centros", href: "/centros/panel" },
     { label: "Menú completo", href: "/mega-menu" },
   ];
+
+  function handleLogout() {
+    logout();
+    navigate('/');
+  }
 
   return (
     <header className="sticky top-0 bg-white border-b border-gray-200 z-50">
@@ -59,8 +67,29 @@ export function Header() {
                 Donar ahora
               </Button>
             </Link>
-            <Button variant="outline">Ingresar</Button>
-            
+
+            {user ? (
+              <div className="hidden lg:flex items-center gap-2">
+                <span className="flex items-center gap-1.5 text-sm text-gray-700">
+                  <User className="size-4" />
+                  {user.nombre}
+                </span>
+                <Button variant="outline" size="sm" onClick={handleLogout}>
+                  <LogOut className="size-4 mr-1" />
+                  Salir
+                </Button>
+              </div>
+            ) : (
+              <div className="hidden lg:flex items-center gap-2">
+                <Link to="/login">
+                  <Button variant="outline">Ingresar</Button>
+                </Link>
+                <Link to="/registro">
+                  <Button variant="ghost" className="text-pink-600">Registrarse</Button>
+                </Link>
+              </div>
+            )}
+
             {/* Menú móvil */}
             <button
               className="lg:hidden p-2"
@@ -73,7 +102,7 @@ export function Header() {
 
         {/* Menú móvil desplegable */}
         {menuOpen && (
-          <nav className="lg:hidden mt-4 pb-4 border-t border-gray-200 pt-4">
+          <nav className="lg:hidden mt-4 pb-4 border-t border-gray-200 pt-4 space-y-1">
             {menuItems.map((item) => (
               <Link
                 key={item.href}
@@ -84,6 +113,25 @@ export function Header() {
                 {item.label}
               </Link>
             ))}
+            <div className="pt-2 border-t border-gray-100 mt-2">
+              {user ? (
+                <button
+                  onClick={() => { handleLogout(); setMenuOpen(false); }}
+                  className="block w-full text-left px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg"
+                >
+                  Cerrar sesión ({user.nombre})
+                </button>
+              ) : (
+                <>
+                  <Link to="/login" onClick={() => setMenuOpen(false)} className="block px-3 py-2 text-sm hover:bg-gray-100 rounded-lg">
+                    Ingresar
+                  </Link>
+                  <Link to="/registro" onClick={() => setMenuOpen(false)} className="block px-3 py-2 text-sm text-pink-600 hover:bg-pink-50 rounded-lg">
+                    Registrarse
+                  </Link>
+                </>
+              )}
+            </div>
           </nav>
         )}
       </div>

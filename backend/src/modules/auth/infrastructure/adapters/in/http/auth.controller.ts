@@ -1,8 +1,10 @@
-import { Body, Controller, Get, Inject, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Post, UseGuards } from '@nestjs/common';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { LOGIN_PORT, LoginPort } from '../../../../domain/ports/in/login.port';
 import { REGISTER_PORT, RegisterPort } from '../../../../domain/ports/in/register.port';
+import { JwtAuthGuard } from './jwt-auth.guard';
+import { GetUser, JwtUser } from '../../../../../../shared/decorators/get-user.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -21,9 +23,9 @@ export class AuthController {
     return this.registerUseCase.execute(dto);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get('me')
-  getMe(@Req() req: any) {
-    // TODO: implementar con JwtAuthGuard
-    throw new Error('Not implemented');
+  getMe(@GetUser() user: JwtUser) {
+    return user;
   }
 }

@@ -11,6 +11,6 @@ export class GetMyAppointmentsUseCase implements GetMyAppointmentsPort {
   ) {}
 
   async execute(donorId: string): Promise<AppointmentEntity[]> {
-    throw new Error('Not implemented');
+    return this.appointmentsRepository.findByDonorId(donorId);
   }
 }

@@ -11,6 +11,6 @@ export class GetCentersUseCase implements GetCentersPort {
   ) {}
 
   async execute(): Promise<CenterEntity[]> {
-    throw new Error('Not implemented');
+    return this.centersRepository.findAll();
   }
 }

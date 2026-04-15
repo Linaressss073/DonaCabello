@@ -11,6 +11,6 @@ export class GetCampaignsUseCase implements GetCampaignsPort {
   ) {}
 
   async execute(): Promise<CampaignEntity[]> {
-    throw new Error('Not implemented');
+    return this.campaignsRepository.findAll();
   }
 }

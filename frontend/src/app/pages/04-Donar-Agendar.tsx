@@ -27,6 +27,7 @@ type FormData = CreateAppointmentDto & { terminos: boolean };
 
 export default function DonarAgendar() {
   const [centers, setCenters] = useState<Center[]>([]);
+  const [centersError, setCentersError] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -40,7 +41,9 @@ export default function DonarAgendar() {
   } = useForm<FormData>();
 
   useEffect(() => {
-    getCenters({ soloVerificados: true }).then(setCenters).catch(() => {});
+    getCenters({ soloVerificados: true })
+      .then(setCenters)
+      .catch(() => setCentersError(true));
   }, []);
 
   async function onSubmit({ terminos: _t, ...dto }: FormData) {
@@ -180,25 +183,30 @@ export default function DonarAgendar() {
                         {/* Centro */}
                         <div className="space-y-2">
                           <Label>Centro aliado *</Label>
-                          <Controller
-                            name="centroId"
-                            control={control}
-                            rules={{ required: 'Selecciona un centro' }}
-                            render={({ field }) => (
-                              <Select onValueChange={field.onChange} value={field.value}>
-                                <SelectTrigger><SelectValue placeholder="Selecciona un centro verificado" /></SelectTrigger>
-                                <SelectContent>
-                                  {centers.map((c) => (
-                                    <SelectItem key={c.id} value={c.id}>
-                                      {c.nombre} — {c.zona} (Verificado)
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                            )}
-                          />
+                          {centersError ? (
+                            <p className="text-sm text-red-600">No se pudieron cargar los centros. Verifica tu conexión y recarga la página.</p>
+                          ) : centers.length === 0 ? (
+                            <p className="text-sm text-amber-600">No hay centros disponibles en este momento.</p>
+                          ) : (
+                            <Controller
+                              name="centroId"
+                              control={control}
+                              rules={{ required: 'Selecciona un centro' }}
+                              render={({ field }) => (
+                                <Select onValueChange={field.onChange} value={field.value}>
+                                  <SelectTrigger><SelectValue placeholder="Selecciona un centro verificado" /></SelectTrigger>
+                                  <SelectContent>
+                                    {centers.map((c) => (
+                                      <SelectItem key={c.id} value={c.id}>
+                                        {c.nombre} — {c.zona}
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                              )}
+                            />
+                          )}
                           {errors.centroId && <p className="text-xs text-red-600">{errors.centroId.message}</p>}
-                          <p className="text-xs text-gray-500">Solo mostramos centros aliados verificados</p>
                         </div>
 
                         {/* Fecha y Hora */}
