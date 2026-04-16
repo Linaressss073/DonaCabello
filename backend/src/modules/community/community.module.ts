@@ -8,6 +8,7 @@ import { ContactDocument, ContactSchema, FaqDocument, FaqSchema, MythDocument, M
 import { COMMUNITY_REPOSITORY_PORT } from './domain/ports/out/community-repository.port';
 import { GET_FAQS_PORT } from './domain/ports/in/get-faqs.port';
 import { SEND_CONTACT_PORT } from './domain/ports/in/send-contact.port';
+import { EmailModule } from '../../shared/email/email.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { SEND_CONTACT_PORT } from './domain/ports/in/send-contact.port';
       { name: MythDocument.name, schema: MythSchema },
       { name: ContactDocument.name, schema: ContactSchema },
     ]),
+    EmailModule,
   ],
   controllers: [CommunityController],
   providers: [

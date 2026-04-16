@@ -1,7 +1,9 @@
-import { Body, Controller, Get, Inject, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Param, Post, UseGuards } from '@nestjs/common';
 import { GET_CENTERS_PORT, GetCentersPort } from '../../../../domain/ports/in/get-centers.port';
 import { REGISTER_CENTER_PORT, RegisterCenterPort } from '../../../../domain/ports/in/register-center.port';
 import { RegisterCenterDto } from './dto/register-center.dto';
+import { JwtAuthGuard } from '../../../../../../shared/guards/jwt-auth.guard';
+import { GetUser } from '../../../../../../shared/decorators/get-user.decorator';
 
 @Controller('centers')
 export class CentersController {
@@ -15,21 +17,22 @@ export class CentersController {
     return this.getCentersUseCase.execute();
   }
 
-  @Get(':id')
-  getOne(@Param('id') id: string) {
-    // TODO: implementar GetCenterByIdUseCase
-    throw new Error('Not implemented');
+  // Rutas estáticas ANTES que las dinámicas (:id)
+  @UseGuards(JwtAuthGuard)
+  @Get('panel/my')
+  async panel(@GetUser() user: any) {
+    const all = await this.getCentersUseCase.execute();
+    return all.filter((c) => c.ownerId === user.id);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post('register')
-  register(@Body() dto: RegisterCenterDto) {
-    // TODO: extraer ownerId del JWT
-    throw new Error('Not implemented');
+  register(@Body() dto: RegisterCenterDto, @GetUser() user: any) {
+    return this.registerCenterUseCase.execute({ ...dto, ownerId: user.id });
   }
 
-  @Get('panel')
-  panel() {
-    // TODO: implementar con JwtAuthGuard + extraer ownerId
+  @Get(':id')
+  getOne(@Param('id') _id: string) {
     throw new Error('Not implemented');
   }
 }

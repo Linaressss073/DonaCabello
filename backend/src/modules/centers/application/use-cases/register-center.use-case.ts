@@ -11,6 +11,17 @@ export class RegisterCenterUseCase implements RegisterCenterPort {
   ) {}
 
   async execute(command: RegisterCenterCommand): Promise<CenterEntity> {
-    throw new Error('Not implemented');
+    const center = new CenterEntity();
+    center.name = command.name;
+    center.address = command.address;
+    center.city = command.city;
+    center.phone = command.phone;
+    center.email = command.email;
+    center.description = command.description;
+    center.ownerId = command.ownerId;
+    center.latitude = command.latitude ?? 0;
+    center.longitude = command.longitude ?? 0;
+    center.status = 'pending';
+    return this.centersRepository.save(center);
   }
 }

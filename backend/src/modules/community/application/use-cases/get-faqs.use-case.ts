@@ -11,6 +11,6 @@ export class GetFaqsUseCase implements GetFaqsPort {
   ) {}
 
   async execute(): Promise<FaqEntity[]> {
-    throw new Error('Not implemented');
+    return this.communityRepository.findFaqs();
   }
 }

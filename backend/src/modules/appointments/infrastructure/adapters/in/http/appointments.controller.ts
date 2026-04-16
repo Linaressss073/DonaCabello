@@ -1,8 +1,11 @@
-import { Body, Controller, Get, Inject, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { GET_MY_APPOINTMENTS_PORT, GetMyAppointmentsPort } from '../../../../domain/ports/in/get-my-appointments.port';
 import { CREATE_APPOINTMENT_PORT, CreateAppointmentPort } from '../../../../domain/ports/in/create-appointment.port';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
+import { JwtAuthGuard } from '../../../../../../shared/guards/jwt-auth.guard';
+import { GetUser } from '../../../../../../shared/decorators/get-user.decorator';
 
+@UseGuards(JwtAuthGuard)
 @Controller('appointments')
 export class AppointmentsController {
   constructor(
@@ -11,26 +14,27 @@ export class AppointmentsController {
   ) {}
 
   @Get('my')
-  getMy() {
-    // TODO: extraer donorId del JWT
-    throw new Error('Not implemented');
+  getMy(@GetUser() user: any) {
+    return this.getMyAppointmentsUseCase.execute(user.id);
   }
 
   @Post()
-  create(@Body() dto: CreateAppointmentDto) {
-    // TODO: extraer donorId del JWT
-    throw new Error('Not implemented');
+  create(@Body() dto: CreateAppointmentDto, @GetUser() user: any) {
+    return this.createAppointmentUseCase.execute({
+      donorId: user.id,
+      centerId: dto.centerId,
+      scheduledAt: new Date(dto.scheduledAt),
+      notes: dto.notes,
+    });
   }
 
   @Patch(':id/confirm')
-  confirm(@Param('id') id: string) {
-    // TODO: implementar ConfirmAppointmentUseCase
+  confirm(@Param('id') _id: string) {
     throw new Error('Not implemented');
   }
 
   @Patch(':id/cancel')
-  cancel(@Param('id') id: string) {
-    // TODO: implementar CancelAppointmentUseCase
+  cancel(@Param('id') _id: string) {
     throw new Error('Not implemented');
   }
 }

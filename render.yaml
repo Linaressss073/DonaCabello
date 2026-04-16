@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: dona-cabello-api
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install -g pnpm && pnpm install --frozen-lockfile && pnpm run build
+    startCommand: pnpm run start:prod
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: MAILTRAP_HOST
+        sync: false
+      - key: MAILTRAP_PORT
+        sync: false
+      - key: MAILTRAP_USER
+        sync: false
+      - key: MAILTRAP_PASS
+        sync: false
+      - key: MAILTRAP_FROM
+        sync: false
+      - key: FRONTEND_URL
+        sync: false

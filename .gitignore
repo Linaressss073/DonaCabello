@@ -26,6 +26,7 @@ Thumbs.db
 backend/dist/
 backend/node_modules/
 
-# Frontend (Vite)
-frontend/dist/
+# Frontend (Next.js)
+frontend/.next/
+frontend/out/
 frontend/node_modules/
