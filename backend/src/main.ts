@@ -10,7 +10,9 @@ async function bootstrap() {
 
   const frontendUrl = process.env.FRONTEND_URL;
   app.enableCors({
-    origin: frontendUrl ? frontendUrl.split(',').map((u) => u.trim()) : '*',
+    origin: frontendUrl
+      ? frontendUrl.split(',').map((u) => u.trim().replace(/\/$/, ''))
+      : '*',
     credentials: true,
   });
 
