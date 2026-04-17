@@ -28,7 +28,7 @@ export class ForgotPasswordUseCase implements ForgotPasswordPort {
       { expiresIn: '1h' },
     );
 
-    const frontendUrl = this.configService.get<string>('FRONTEND_URL') ?? 'http://localhost:3001';
+    const frontendUrl = this.configService.get<string>('FRONTEND_URL') ?? 'https://dona-cabello.vercel.app';
     const resetUrl = `${frontendUrl}/restablecer-contrasena?token=${token}`;
 
     await this.emailService.sendPasswordReset({ to: user.email, name: user.name, resetUrl });
