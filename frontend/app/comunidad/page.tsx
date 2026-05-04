@@ -5,8 +5,8 @@ import { useQuery } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { getFaqs, sendContact } from "@/lib/api";
-import { Faq } from "@/types";
+import { getFaqs, sendContact, getMyths } from "@/lib/api";
+import { Faq, Myth } from "@/types";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
@@ -15,7 +15,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { MessageSquare, CheckCircle, Loader2, AlertCircle } from "lucide-react";
+import { MessageSquare, CheckCircle, Loader2, AlertCircle, ShieldCheck, XCircle } from "lucide-react";
 
 const contactSchema = z.object({
   name: z.string().min(2, "Ingresa tu nombre"),
@@ -31,6 +31,11 @@ export default function ComunidadPage() {
   const { data: faqs, isLoading } = useQuery<Faq[]>({
     queryKey: ["faqs"],
     queryFn: getFaqs,
+  });
+
+  const { data: myths, isLoading: mythsLoading } = useQuery<Myth[]>({
+    queryKey: ["myths"],
+    queryFn: getMyths,
   });
 
   const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<ContactData>({
@@ -99,6 +104,55 @@ export default function ComunidadPage() {
                   ))}
                 </Accordion>
               </>
+            )}
+          </section>
+
+          {/* Mitos y realidades */}
+          <section>
+            <h2 className="text-2xl font-bold mb-6 text-gray-900">Mitos y realidades</h2>
+            {mythsLoading ? (
+              <div className="space-y-4">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="rounded-xl border border-gray-200 p-4">
+                    <Skeleton className="h-4 w-2/3 mb-2" />
+                    <Skeleton className="h-3 w-full" />
+                  </div>
+                ))}
+              </div>
+            ) : myths && myths.length > 0 ? (
+              <div className="space-y-4">
+                {myths.map((item) => (
+                  <div key={item.id} className="rounded-xl border border-gray-200 overflow-hidden">
+                    <div className="flex items-start gap-3 bg-red-50 border-b border-red-100 px-4 py-3">
+                      <XCircle className="h-5 w-5 text-red-400 mt-0.5 shrink-0" />
+                      <p className="text-sm font-medium text-red-800">{item.myth}</p>
+                    </div>
+                    <div className="flex items-start gap-3 bg-green-50 px-4 py-3">
+                      <ShieldCheck className="h-5 w-5 text-green-500 mt-0.5 shrink-0" />
+                      <p className="text-sm text-green-800">{item.reality}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {[
+                  { myth: "El cabello teñido no sirve para donar.", reality: "Los tintes suaves sí se aceptan; solo se rechazan decoloraciones severas o permanentes recientes." },
+                  { myth: "Solo se puede donar cabello largo (más de 40 cm).", reality: "El mínimo es 20 cm medidos en trenza, suficiente para fabricar pelucas parciales." },
+                  { myth: "El cabello con canas no sirve.", reality: "Se acepta si las canas no superan el 25% del total del cabello donado." },
+                ].map((item, i) => (
+                  <div key={i} className="rounded-xl border border-gray-200 overflow-hidden">
+                    <div className="flex items-start gap-3 bg-red-50 border-b border-red-100 px-4 py-3">
+                      <XCircle className="h-5 w-5 text-red-400 mt-0.5 shrink-0" />
+                      <p className="text-sm font-medium text-red-800">{item.myth}</p>
+                    </div>
+                    <div className="flex items-start gap-3 bg-green-50 px-4 py-3">
+                      <ShieldCheck className="h-5 w-5 text-green-500 mt-0.5 shrink-0" />
+                      <p className="text-sm text-green-800">{item.reality}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
             )}
           </section>
 

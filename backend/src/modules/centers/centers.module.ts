@@ -18,6 +18,7 @@ import { UPDATE_CENTER_STATUS_PORT } from './domain/ports/in/update-center-statu
 @Module({
   imports: [MongooseModule.forFeature([{ name: CenterDocument.name, schema: CenterSchema }])],
   controllers: [CentersController],
+  exports: [CENTERS_REPOSITORY_PORT],
   providers: [
     { provide: CENTERS_REPOSITORY_PORT, useClass: MongooseCentersRepository },
     { provide: GET_CENTERS_PORT, useClass: GetCentersUseCase },

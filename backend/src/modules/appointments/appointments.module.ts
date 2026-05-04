@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
+import { CentersModule } from '../centers/centers.module';
 import { AppointmentsController } from './infrastructure/adapters/in/http/appointments.controller';
 import { CreateAppointmentUseCase } from './application/use-cases/create-appointment.use-case';
 import { GetMyAppointmentsUseCase } from './application/use-cases/get-my-appointments.use-case';
@@ -16,7 +17,10 @@ import { CANCEL_APPOINTMENT_PORT } from './domain/ports/in/cancel-appointment.po
 import { GET_CENTER_APPOINTMENTS_PORT } from './domain/ports/in/get-center-appointments.port';
 
 @Module({
-  imports: [MongooseModule.forFeature([{ name: AppointmentDocument.name, schema: AppointmentSchema }])],
+  imports: [
+    MongooseModule.forFeature([{ name: AppointmentDocument.name, schema: AppointmentSchema }]),
+    CentersModule,
+  ],
   controllers: [AppointmentsController],
   providers: [
     { provide: APPOINTMENTS_REPOSITORY_PORT, useClass: MongooseAppointmentsRepository },
