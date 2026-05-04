@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useQuery } from "@tanstack/react-query";
-import { getMyAppointments } from "@/lib/api";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { getMyAppointments, confirmAppointment, cancelAppointment } from "@/lib/api";
 import { useAuth } from "@/contexts/AuthContext";
 import { Appointment } from "@/types";
 import { Header } from "@/components/layout/Header";
@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent } from "@/components/ui/card";
-import { Calendar, Clock, Lock, Loader2, Plus } from "lucide-react";
+import { Calendar, Clock, Lock, Loader2, Plus, CheckCircle, XCircle } from "lucide-react";
 import { format } from "date-fns";
 import { es } from "date-fns/locale";
 
@@ -24,11 +24,18 @@ const STATUS_LABELS: Record<Appointment["status"], { label: string; variant: "de
 
 export default function MisCitasPage() {
   const { user, isLoading: authLoading } = useAuth();
+  const queryClient = useQueryClient();
 
   const { data: appointments, isLoading } = useQuery<Appointment[]>({
     queryKey: ["appointments", "my"],
     queryFn: getMyAppointments,
     enabled: !!user,
+  });
+
+  const mutation = useMutation({
+    mutationFn: ({ id, action }: { id: string; action: "confirm" | "cancel" }) =>
+      action === "confirm" ? confirmAppointment(id) : cancelAppointment(id),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["appointments", "my"] }),
   });
 
   if (authLoading) {
@@ -87,19 +94,45 @@ export default function MisCitasPage() {
                 const { label, variant } = STATUS_LABELS[appt.status];
                 return (
                   <Card key={appt.id}>
-                    <CardContent className="flex items-center justify-between p-6">
-                      <div className="space-y-1">
-                        <div className="flex items-center gap-2 text-sm text-gray-500">
-                          <Calendar className="h-4 w-4" />
-                          <span>{format(new Date(appt.scheduledAt), "EEEE, d 'de' MMMM yyyy", { locale: es })}</span>
+                    <CardContent className="p-6">
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-2 text-sm text-gray-500">
+                            <Calendar className="h-4 w-4" />
+                            <span>{format(new Date(appt.scheduledAt), "EEEE, d 'de' MMMM yyyy", { locale: es })}</span>
+                          </div>
+                          <div className="flex items-center gap-2 text-sm text-gray-500">
+                            <Clock className="h-4 w-4" />
+                            <span>{format(new Date(appt.scheduledAt), "HH:mm", { locale: es })} hrs</span>
+                          </div>
+                          {appt.notes && <p className="text-sm text-gray-600 mt-1">{appt.notes}</p>}
                         </div>
-                        <div className="flex items-center gap-2 text-sm text-gray-500">
-                          <Clock className="h-4 w-4" />
-                          <span>{format(new Date(appt.scheduledAt), "HH:mm", { locale: es })} hrs</span>
-                        </div>
-                        {appt.notes && <p className="text-sm text-gray-600 mt-1">{appt.notes}</p>}
+                        <Badge variant={variant}>{label}</Badge>
                       </div>
-                      <Badge variant={variant}>{label}</Badge>
+                      {appt.status === "pending" && (
+                        <div className="flex gap-2 mt-4">
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="text-green-600 hover:bg-green-50"
+                            disabled={mutation.isPending}
+                            onClick={() => mutation.mutate({ id: appt.id, action: "confirm" })}
+                          >
+                            {mutation.isPending ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : <CheckCircle className="h-4 w-4 mr-1" />}
+                            Confirmar
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="text-red-600 hover:bg-red-50"
+                            disabled={mutation.isPending}
+                            onClick={() => mutation.mutate({ id: appt.id, action: "cancel" })}
+                          >
+                            {mutation.isPending ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : <XCircle className="h-4 w-4 mr-1" />}
+                            Cancelar
+                          </Button>
+                        </div>
+                      )}
                     </CardContent>
                   </Card>
                 );

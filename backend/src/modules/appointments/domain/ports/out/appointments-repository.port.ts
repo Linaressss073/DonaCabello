@@ -2,6 +2,7 @@ import { AppointmentEntity } from '../../entities/appointment.entity';
 
 export interface AppointmentsRepositoryPort {
   findByDonorId(donorId: string): Promise<AppointmentEntity[]>;
+  findByCenterId(centerId: string): Promise<AppointmentEntity[]>;
   findById(id: string): Promise<AppointmentEntity | null>;
   save(appointment: AppointmentEntity): Promise<AppointmentEntity>;
   update(id: string, partial: Partial<AppointmentEntity>): Promise<AppointmentEntity>;

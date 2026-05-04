@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Inject, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { GET_CENTERS_PORT, GetCentersPort } from '../../../../domain/ports/in/get-centers.port';
 import { GET_CENTER_BY_ID_PORT, GetCenterByIdPort } from '../../../../domain/ports/in/get-center-by-id.port';
+import { GET_MY_CENTERS_PORT, GetMyCentersPort } from '../../../../domain/ports/in/get-my-centers.port';
 import { REGISTER_CENTER_PORT, RegisterCenterPort } from '../../../../domain/ports/in/register-center.port';
 import { UPDATE_CENTER_STATUS_PORT, UpdateCenterStatusPort } from '../../../../domain/ports/in/update-center-status.port';
 import { RegisterCenterDto } from './dto/register-center.dto';
@@ -15,6 +16,7 @@ export class CentersController {
   constructor(
     @Inject(GET_CENTERS_PORT) private readonly getCentersUseCase: GetCentersPort,
     @Inject(GET_CENTER_BY_ID_PORT) private readonly getCenterByIdUseCase: GetCenterByIdPort,
+    @Inject(GET_MY_CENTERS_PORT) private readonly getMyCentersUseCase: GetMyCentersPort,
     @Inject(REGISTER_CENTER_PORT) private readonly registerCenterUseCase: RegisterCenterPort,
     @Inject(UPDATE_CENTER_STATUS_PORT) private readonly updateCenterStatusUseCase: UpdateCenterStatusPort,
   ) {}
@@ -27,9 +29,8 @@ export class CentersController {
   // Rutas estáticas ANTES que las dinámicas (:id)
   @UseGuards(JwtAuthGuard)
   @Get('panel/my')
-  async panel(@GetUser() user: any) {
-    const all = await this.getCentersUseCase.execute();
-    return all.filter((c) => c.ownerId === user.id);
+  panel(@GetUser() user: any) {
+    return this.getMyCentersUseCase.execute(user.id);
   }
 
   @UseGuards(JwtAuthGuard)

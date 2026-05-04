@@ -31,7 +31,7 @@ export default function LoginPage() {
     setError("");
     try {
       const res = await login(data.email, data.password);
-      signIn(res.access_token, res.user);
+      signIn(res.access_token, res.refresh_token, res.user);
       router.push(res.user.role === "center" ? "/panel" : "/");
     } catch (err: any) {
       setError(err?.response?.data?.message ?? "Credenciales inválidas");

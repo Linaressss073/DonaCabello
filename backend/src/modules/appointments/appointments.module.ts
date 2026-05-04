@@ -5,6 +5,7 @@ import { CreateAppointmentUseCase } from './application/use-cases/create-appoint
 import { GetMyAppointmentsUseCase } from './application/use-cases/get-my-appointments.use-case';
 import { ConfirmAppointmentUseCase } from './application/use-cases/confirm-appointment.use-case';
 import { CancelAppointmentUseCase } from './application/use-cases/cancel-appointment.use-case';
+import { GetCenterAppointmentsUseCase } from './application/use-cases/get-center-appointments.use-case';
 import { MongooseAppointmentsRepository } from './infrastructure/adapters/out/persistence/mongoose-appointments.repository';
 import { AppointmentDocument, AppointmentSchema } from './infrastructure/adapters/out/persistence/schemas/appointment.schema';
 import { APPOINTMENTS_REPOSITORY_PORT } from './domain/ports/out/appointments-repository.port';
@@ -12,6 +13,7 @@ import { CREATE_APPOINTMENT_PORT } from './domain/ports/in/create-appointment.po
 import { GET_MY_APPOINTMENTS_PORT } from './domain/ports/in/get-my-appointments.port';
 import { CONFIRM_APPOINTMENT_PORT } from './domain/ports/in/confirm-appointment.port';
 import { CANCEL_APPOINTMENT_PORT } from './domain/ports/in/cancel-appointment.port';
+import { GET_CENTER_APPOINTMENTS_PORT } from './domain/ports/in/get-center-appointments.port';
 
 @Module({
   imports: [MongooseModule.forFeature([{ name: AppointmentDocument.name, schema: AppointmentSchema }])],
@@ -22,6 +24,7 @@ import { CANCEL_APPOINTMENT_PORT } from './domain/ports/in/cancel-appointment.po
     { provide: GET_MY_APPOINTMENTS_PORT, useClass: GetMyAppointmentsUseCase },
     { provide: CONFIRM_APPOINTMENT_PORT, useClass: ConfirmAppointmentUseCase },
     { provide: CANCEL_APPOINTMENT_PORT, useClass: CancelAppointmentUseCase },
+    { provide: GET_CENTER_APPOINTMENTS_PORT, useClass: GetCenterAppointmentsUseCase },
   ],
 })
 export class AppointmentsModule {}

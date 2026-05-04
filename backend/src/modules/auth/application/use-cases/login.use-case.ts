@@ -1,5 +1,6 @@
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcryptjs';
 import { LoginCommand, LoginPort, LoginResult } from '../../domain/ports/in/login.port';
 import { AUTH_REPOSITORY_PORT, AuthRepositoryPort } from '../../domain/ports/out/auth-repository.port';
@@ -10,6 +11,7 @@ export class LoginUseCase implements LoginPort {
     @Inject(AUTH_REPOSITORY_PORT)
     private readonly authRepository: AuthRepositoryPort,
     private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
   ) {}
 
   async execute(command: LoginCommand): Promise<LoginResult> {
@@ -20,10 +22,19 @@ export class LoginUseCase implements LoginPort {
     if (!valid) throw new UnauthorizedException('Credenciales inválidas');
 
     const payload = { sub: user.id, email: user.email, role: user.role };
-    const access_token = this.jwtService.sign(payload);
+
+    const accessToken = this.jwtService.sign(payload);
+
+    const refreshSecret  = this.configService.get<string>('JWT_REFRESH_SECRET') ?? 'refresh-secret';
+    const refreshExpires = this.configService.get<string>('JWT_REFRESH_EXPIRES_IN') ?? '30d';
+    const refreshToken   = this.jwtService.sign(
+      { ...payload, type: 'refresh' },
+      { secret: refreshSecret, expiresIn: refreshExpires },
+    );
 
     return {
-      accessToken: access_token,
+      accessToken,
+      refreshToken,
       user: { id: user.id, email: user.email, name: user.name, role: user.role },
     };
   }

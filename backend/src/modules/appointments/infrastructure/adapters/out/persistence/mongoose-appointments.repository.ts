@@ -17,6 +17,11 @@ export class MongooseAppointmentsRepository implements AppointmentsRepositoryPor
     return docs.map((d) => this.toEntity(d));
   }
 
+  async findByCenterId(centerId: string): Promise<AppointmentEntity[]> {
+    const docs = await this.appointmentModel.find({ centerId }).exec();
+    return docs.map((d) => this.toEntity(d));
+  }
+
   async findById(id: string): Promise<AppointmentEntity | null> {
     const doc = await this.appointmentModel.findById(id).exec();
     return doc ? this.toEntity(doc) : null;

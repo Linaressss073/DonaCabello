@@ -3,6 +3,7 @@ import { GET_MY_APPOINTMENTS_PORT, GetMyAppointmentsPort } from '../../../../dom
 import { CREATE_APPOINTMENT_PORT, CreateAppointmentPort } from '../../../../domain/ports/in/create-appointment.port';
 import { CONFIRM_APPOINTMENT_PORT, ConfirmAppointmentPort } from '../../../../domain/ports/in/confirm-appointment.port';
 import { CANCEL_APPOINTMENT_PORT, CancelAppointmentPort } from '../../../../domain/ports/in/cancel-appointment.port';
+import { GET_CENTER_APPOINTMENTS_PORT, GetCenterAppointmentsPort } from '../../../../domain/ports/in/get-center-appointments.port';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { JwtAuthGuard } from '../../../../../../shared/guards/jwt-auth.guard';
 import { GetUser } from '../../../../../../shared/decorators/get-user.decorator';
@@ -15,6 +16,7 @@ export class AppointmentsController {
     @Inject(CREATE_APPOINTMENT_PORT) private readonly createAppointmentUseCase: CreateAppointmentPort,
     @Inject(CONFIRM_APPOINTMENT_PORT) private readonly confirmAppointmentUseCase: ConfirmAppointmentPort,
     @Inject(CANCEL_APPOINTMENT_PORT) private readonly cancelAppointmentUseCase: CancelAppointmentPort,
+    @Inject(GET_CENTER_APPOINTMENTS_PORT) private readonly getCenterAppointmentsUseCase: GetCenterAppointmentsPort,
   ) {}
 
   @Get('my')
@@ -40,5 +42,11 @@ export class AppointmentsController {
   @Patch(':id/cancel')
   cancel(@Param('id') id: string) {
     return this.cancelAppointmentUseCase.execute(id);
+  }
+
+  // Ruta estática ANTES que las dinámicas
+  @Get('center/my')
+  getCenterAppointments(@GetUser() user: any) {
+    return this.getCenterAppointmentsUseCase.execute(user.id);
   }
 }

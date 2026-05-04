@@ -36,7 +36,7 @@ export default function RegisterPage() {
     setError("");
     try {
       const res = await registerUser(data);
-      signIn(res.access_token, res.user);
+      signIn(res.access_token, res.refresh_token, res.user);
       router.push(res.user.role === "center" ? "/centros/registro" : "/");
     } catch (err: any) {
       setError(err?.response?.data?.message ?? "Error al registrarse");

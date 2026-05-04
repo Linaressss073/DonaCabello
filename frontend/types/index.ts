@@ -50,6 +50,13 @@ export interface Faq {
   order: number;
 }
 
+export interface Myth {
+  id: string;
+  myth: string;
+  reality: string;
+  order: number;
+}
+
 export interface Appointment {
   id: string;
   donorId: string;

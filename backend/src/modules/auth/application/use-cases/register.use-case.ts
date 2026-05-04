@@ -1,5 +1,6 @@
 import { ConflictException, Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcryptjs';
 import { RegisterCommand, RegisterPort, RegisterResult } from '../../domain/ports/in/register.port';
 import { AUTH_REPOSITORY_PORT, AuthRepositoryPort } from '../../domain/ports/out/auth-repository.port';
@@ -11,6 +12,7 @@ export class RegisterUseCase implements RegisterPort {
     @Inject(AUTH_REPOSITORY_PORT)
     private readonly authRepository: AuthRepositoryPort,
     private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
   ) {}
 
   async execute(command: RegisterCommand): Promise<RegisterResult> {
@@ -28,10 +30,19 @@ export class RegisterUseCase implements RegisterPort {
     const saved = await this.authRepository.save(userEntity);
 
     const payload = { sub: saved.id, email: saved.email, role: saved.role };
-    const access_token = this.jwtService.sign(payload);
+
+    const accessToken = this.jwtService.sign(payload);
+
+    const refreshSecret  = this.configService.get<string>('JWT_REFRESH_SECRET') ?? 'refresh-secret';
+    const refreshExpires = this.configService.get<string>('JWT_REFRESH_EXPIRES_IN') ?? '30d';
+    const refreshToken   = this.jwtService.sign(
+      { ...payload, type: 'refresh' },
+      { secret: refreshSecret, expiresIn: refreshExpires },
+    );
 
     return {
-      accessToken: access_token,
+      accessToken,
+      refreshToken,
       user: { id: saved.id, email: saved.email, name: saved.name, role: saved.role },
     };
   }

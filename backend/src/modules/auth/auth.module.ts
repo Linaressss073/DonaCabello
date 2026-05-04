@@ -8,6 +8,7 @@ import { LoginUseCase } from './application/use-cases/login.use-case';
 import { RegisterUseCase } from './application/use-cases/register.use-case';
 import { ForgotPasswordUseCase } from './application/use-cases/forgot-password.use-case';
 import { ResetPasswordUseCase } from './application/use-cases/reset-password.use-case';
+import { RefreshTokenUseCase } from './application/use-cases/refresh-token.use-case';
 import { MongooseAuthRepository } from './infrastructure/adapters/out/persistence/mongoose-auth.repository';
 import { UserDocument, UserSchema } from './infrastructure/adapters/out/persistence/schemas/user.schema';
 import { AUTH_REPOSITORY_PORT } from './domain/ports/out/auth-repository.port';
@@ -15,6 +16,7 @@ import { LOGIN_PORT } from './domain/ports/in/login.port';
 import { REGISTER_PORT } from './domain/ports/in/register.port';
 import { FORGOT_PASSWORD_PORT } from './domain/ports/in/forgot-password.port';
 import { RESET_PASSWORD_PORT } from './domain/ports/in/reset-password.port';
+import { REFRESH_TOKEN_PORT } from './domain/ports/in/refresh-token.port';
 import { JwtStrategy } from '../../shared/strategies/jwt.strategy';
 import { EmailModule } from '../../shared/email/email.module';
 
@@ -39,6 +41,7 @@ import { EmailModule } from '../../shared/email/email.module';
     { provide: REGISTER_PORT, useClass: RegisterUseCase },
     { provide: FORGOT_PASSWORD_PORT, useClass: ForgotPasswordUseCase },
     { provide: RESET_PASSWORD_PORT, useClass: ResetPasswordUseCase },
+    { provide: REFRESH_TOKEN_PORT, useClass: RefreshTokenUseCase },
     JwtStrategy,
   ],
   exports: [AUTH_REPOSITORY_PORT, JwtModule],

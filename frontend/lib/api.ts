@@ -22,6 +22,9 @@ export const register = (data: { email: string; password: string; name: string; 
 export const getMe = () =>
   api.get("/auth/me").then((r) => r.data);
 
+export const refreshToken = (token: string) =>
+  api.post("/auth/refresh", { refreshToken: token }).then((r) => r.data);
+
 // Centers
 export const getCenters = () =>
   api.get("/centers").then((r) => r.data);
@@ -46,9 +49,22 @@ export const getFaqs = () =>
 export const sendContact = (data: { name: string; email: string; message: string }) =>
   api.post("/community/contact", data).then((r) => r.data);
 
+// Community
+export const getMyths = () =>
+  api.get("/community/myths").then((r) => r.data);
+
 // Appointments
 export const getMyAppointments = () =>
   api.get("/appointments/my").then((r) => r.data);
 
+export const getCenterAppointments = () =>
+  api.get("/appointments/center/my").then((r) => r.data);
+
 export const createAppointment = (data: { centerId: string; scheduledAt: string; notes?: string }) =>
   api.post("/appointments", data).then((r) => r.data);
+
+export const confirmAppointment = (id: string) =>
+  api.patch(`/appointments/${id}/confirm`).then((r) => r.data);
+
+export const cancelAppointment = (id: string) =>
+  api.patch(`/appointments/${id}/cancel`).then((r) => r.data);

@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { CreateAppointmentCommand, CreateAppointmentPort } from '../../domain/ports/in/create-appointment.port';
 import { APPOINTMENTS_REPOSITORY_PORT, AppointmentsRepositoryPort } from '../../domain/ports/out/appointments-repository.port';
 import { AppointmentEntity } from '../../domain/entities/appointment.entity';
@@ -11,6 +11,10 @@ export class CreateAppointmentUseCase implements CreateAppointmentPort {
   ) {}
 
   async execute(command: CreateAppointmentCommand): Promise<AppointmentEntity> {
+    if (command.scheduledAt <= new Date()) {
+      throw new BadRequestException('La fecha de la cita debe ser en el futuro');
+    }
+
     const appointment = new AppointmentEntity();
     appointment.donorId = command.donorId;
     appointment.centerId = command.centerId;

@@ -5,6 +5,7 @@ export interface LoginCommand {
 
 export interface LoginResult {
   accessToken: string;
+  refreshToken: string;
   user: {
     id: string;
     email: string;

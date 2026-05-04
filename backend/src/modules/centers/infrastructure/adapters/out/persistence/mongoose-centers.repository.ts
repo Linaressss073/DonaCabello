@@ -27,6 +27,11 @@ export class MongooseCentersRepository implements CentersRepositoryPort {
     return doc ? this.toEntity(doc) : null;
   }
 
+  async findAllByOwnerId(ownerId: string): Promise<CenterEntity[]> {
+    const docs = await this.centerModel.find({ ownerId }).exec();
+    return docs.map((d) => this.toEntity(d));
+  }
+
   async save(center: CenterEntity): Promise<CenterEntity> {
     const created = await this.centerModel.create({
       name: center.name,
