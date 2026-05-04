@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
-import { Heart, Menu, X, User, LogOut, ChevronDown } from "lucide-react";
+import { Heart, Menu, X, User, LogOut, ChevronDown, ShieldCheck } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -89,6 +89,15 @@ export function Header() {
                         <User className="h-4 w-4" /> Mi panel
                       </Link>
                     )}
+                    {user.role === "admin" && (
+                      <Link
+                        href="/admin"
+                        className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                        onClick={() => setUserMenuOpen(false)}
+                      >
+                        <ShieldCheck className="h-4 w-4" /> Panel admin
+                      </Link>
+                    )}
                     <button
                       onClick={handleSignOut}
                       className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50"
@@ -138,9 +147,26 @@ export function Header() {
           ))}
           <div className="pt-3 border-t border-gray-100 flex gap-2">
             {user ? (
-              <button onClick={handleSignOut} className="text-sm text-red-600">
-                Cerrar sesión
-              </button>
+              <div className="flex flex-col gap-1 w-full">
+                {user.role === "donor" && (
+                  <Link href="/mis-citas" onClick={() => setMobileOpen(false)} className="flex items-center gap-2 text-sm text-gray-700 px-2 py-1.5">
+                    <Heart className="h-4 w-4" /> Mis citas
+                  </Link>
+                )}
+                {user.role === "center" && (
+                  <Link href="/panel" onClick={() => setMobileOpen(false)} className="flex items-center gap-2 text-sm text-gray-700 px-2 py-1.5">
+                    <User className="h-4 w-4" /> Mi panel
+                  </Link>
+                )}
+                {user.role === "admin" && (
+                  <Link href="/admin" onClick={() => setMobileOpen(false)} className="flex items-center gap-2 text-sm text-gray-700 px-2 py-1.5">
+                    <ShieldCheck className="h-4 w-4" /> Panel admin
+                  </Link>
+                )}
+                <button onClick={handleSignOut} className="flex items-center gap-2 text-sm text-red-600 px-2 py-1.5">
+                  <LogOut className="h-4 w-4" /> Cerrar sesión
+                </button>
+              </div>
             ) : (
               <>
                 <Button variant="outline" size="sm" asChild className="flex-1">

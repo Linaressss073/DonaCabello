@@ -35,6 +35,9 @@ export class ContactDocument extends Document {
 
   @Prop({ required: true })
   message: string;
+
+  @Prop()
+  userId?: string;
 }
 
 export const FaqSchema = SchemaFactory.createForClass(FaqDocument);

@@ -19,6 +19,7 @@ export class SendContactUseCase implements SendContactPort {
       email: command.email,
       message: command.message,
       createdAt: new Date(),
+      userId: command.userId,
     };
     await this.communityRepository.saveContact(entity);
     await this.emailService.sendContactNotification(command);

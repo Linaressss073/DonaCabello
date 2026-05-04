@@ -2,6 +2,7 @@ export interface SendContactCommand {
   name: string;
   email: string;
   message: string;
+  userId?: string;
 }
 
 export interface SendContactPort {

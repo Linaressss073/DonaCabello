@@ -18,4 +18,5 @@ export class ContactMessageEntity {
   email: string;
   message: string;
   createdAt: Date;
+  userId?: string;
 }

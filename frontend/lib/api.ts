@@ -32,6 +32,9 @@ export const registerCenter = (data: object) =>
 export const getMyCenters = () =>
   api.get("/centers/panel/my").then((r) => r.data);
 
+export const updateCenterStatus = (id: string, status: "pending" | "verified" | "rejected") =>
+  api.patch(`/centers/${id}/status`, { status }).then((r) => r.data);
+
 // Campaigns
 export const getCampaigns = () =>
   api.get("/campaigns").then((r) => r.data);

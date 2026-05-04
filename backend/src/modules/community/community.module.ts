@@ -2,11 +2,13 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CommunityController } from './infrastructure/adapters/in/http/community.controller';
 import { GetFaqsUseCase } from './application/use-cases/get-faqs.use-case';
+import { GetMythsUseCase } from './application/use-cases/get-myths.use-case';
 import { SendContactUseCase } from './application/use-cases/send-contact.use-case';
 import { MongooseCommunityRepository } from './infrastructure/adapters/out/persistence/mongoose-community.repository';
 import { ContactDocument, ContactSchema, FaqDocument, FaqSchema, MythDocument, MythSchema } from './infrastructure/adapters/out/persistence/schemas/faq.schema';
 import { COMMUNITY_REPOSITORY_PORT } from './domain/ports/out/community-repository.port';
 import { GET_FAQS_PORT } from './domain/ports/in/get-faqs.port';
+import { GET_MYTHS_PORT } from './domain/ports/in/get-myths.port';
 import { SEND_CONTACT_PORT } from './domain/ports/in/send-contact.port';
 import { EmailModule } from '../../shared/email/email.module';
 
@@ -23,6 +25,7 @@ import { EmailModule } from '../../shared/email/email.module';
   providers: [
     { provide: COMMUNITY_REPOSITORY_PORT, useClass: MongooseCommunityRepository },
     { provide: GET_FAQS_PORT, useClass: GetFaqsUseCase },
+    { provide: GET_MYTHS_PORT, useClass: GetMythsUseCase },
     { provide: SEND_CONTACT_PORT, useClass: SendContactUseCase },
   ],
 })

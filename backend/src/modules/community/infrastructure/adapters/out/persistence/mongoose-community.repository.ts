@@ -28,6 +28,7 @@ export class MongooseCommunityRepository implements CommunityRepositoryPort {
       name: message.name,
       email: message.email,
       message: message.message,
+      userId: message.userId,
     });
     return {
       id: created._id.toString(),
@@ -35,6 +36,7 @@ export class MongooseCommunityRepository implements CommunityRepositoryPort {
       email: created.email,
       message: created.message,
       createdAt: (created as any).createdAt,
+      userId: created.userId,
     };
   }
 }

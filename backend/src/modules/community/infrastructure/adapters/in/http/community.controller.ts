@@ -1,5 +1,7 @@
-import { Body, Controller, Get, Inject, Post } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Post, Req } from '@nestjs/common';
+import { Request } from 'express';
 import { GET_FAQS_PORT, GetFaqsPort } from '../../../../domain/ports/in/get-faqs.port';
+import { GET_MYTHS_PORT, GetMythsPort } from '../../../../domain/ports/in/get-myths.port';
 import { SEND_CONTACT_PORT, SendContactPort } from '../../../../domain/ports/in/send-contact.port';
 import { ContactDto } from './dto/contact.dto';
 
@@ -7,6 +9,7 @@ import { ContactDto } from './dto/contact.dto';
 export class CommunityController {
   constructor(
     @Inject(GET_FAQS_PORT) private readonly getFaqsUseCase: GetFaqsPort,
+    @Inject(GET_MYTHS_PORT) private readonly getMythsUseCase: GetMythsPort,
     @Inject(SEND_CONTACT_PORT) private readonly sendContactUseCase: SendContactPort,
   ) {}
 
@@ -17,12 +20,12 @@ export class CommunityController {
 
   @Get('myths')
   getMyths() {
-    // TODO: implementar GetMythsUseCase
-    throw new Error('Not implemented');
+    return this.getMythsUseCase.execute();
   }
 
   @Post('contact')
-  sendContact(@Body() dto: ContactDto) {
-    return this.sendContactUseCase.execute(dto);
+  sendContact(@Body() dto: ContactDto, @Req() req: Request) {
+    const userId = (req as any).user?.sub as string | undefined;
+    return this.sendContactUseCase.execute({ ...dto, userId });
   }
 }

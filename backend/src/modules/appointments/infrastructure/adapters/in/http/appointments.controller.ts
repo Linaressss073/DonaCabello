@@ -1,6 +1,8 @@
 import { Body, Controller, Get, Inject, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { GET_MY_APPOINTMENTS_PORT, GetMyAppointmentsPort } from '../../../../domain/ports/in/get-my-appointments.port';
 import { CREATE_APPOINTMENT_PORT, CreateAppointmentPort } from '../../../../domain/ports/in/create-appointment.port';
+import { CONFIRM_APPOINTMENT_PORT, ConfirmAppointmentPort } from '../../../../domain/ports/in/confirm-appointment.port';
+import { CANCEL_APPOINTMENT_PORT, CancelAppointmentPort } from '../../../../domain/ports/in/cancel-appointment.port';
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { JwtAuthGuard } from '../../../../../../shared/guards/jwt-auth.guard';
 import { GetUser } from '../../../../../../shared/decorators/get-user.decorator';
@@ -11,6 +13,8 @@ export class AppointmentsController {
   constructor(
     @Inject(GET_MY_APPOINTMENTS_PORT) private readonly getMyAppointmentsUseCase: GetMyAppointmentsPort,
     @Inject(CREATE_APPOINTMENT_PORT) private readonly createAppointmentUseCase: CreateAppointmentPort,
+    @Inject(CONFIRM_APPOINTMENT_PORT) private readonly confirmAppointmentUseCase: ConfirmAppointmentPort,
+    @Inject(CANCEL_APPOINTMENT_PORT) private readonly cancelAppointmentUseCase: CancelAppointmentPort,
   ) {}
 
   @Get('my')
@@ -29,12 +33,12 @@ export class AppointmentsController {
   }
 
   @Patch(':id/confirm')
-  confirm(@Param('id') _id: string) {
-    throw new Error('Not implemented');
+  confirm(@Param('id') id: string) {
+    return this.confirmAppointmentUseCase.execute(id);
   }
 
   @Patch(':id/cancel')
-  cancel(@Param('id') _id: string) {
-    throw new Error('Not implemented');
+  cancel(@Param('id') id: string) {
+    return this.cancelAppointmentUseCase.execute(id);
   }
 }
