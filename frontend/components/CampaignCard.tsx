@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Campaign } from "@/types";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -14,7 +15,8 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
   const pct = campaign.goal > 0 ? Math.min((campaign.current / campaign.goal) * 100, 100) : 0;
 
   return (
-    <Card className="overflow-hidden hover:shadow-md transition-shadow">
+    <Link href={`/campanas/${campaign.id}`} className="block">
+    <Card className="overflow-hidden hover:shadow-md transition-shadow cursor-pointer">
       {campaign.imageUrl && (
         <div className="h-40 bg-gray-100 overflow-hidden">
           <img
@@ -65,5 +67,6 @@ export function CampaignCard({ campaign }: CampaignCardProps) {
         )}
       </CardContent>
     </Card>
+    </Link>
   );
 }

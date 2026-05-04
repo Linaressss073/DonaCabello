@@ -45,9 +45,12 @@ export function CenterCard({ center }: CenterCardProps) {
         {center.description && (
           <p className="text-sm text-gray-500 line-clamp-2 pt-1">{center.description}</p>
         )}
-        <div className="pt-2">
-          <Button size="sm" asChild className="w-full">
-            <Link href={`/donar/agendar?centerId=${center.id}`}>Agendar cita aquí</Link>
+        <div className="pt-2 flex gap-2">
+          <Button size="sm" variant="outline" asChild className="flex-1">
+            <Link href={`/centros/${center.id}`}>Ver detalles</Link>
+          </Button>
+          <Button size="sm" asChild className="flex-1">
+            <Link href={`/donar/agendar?centerId=${center.id}`}>Agendar cita</Link>
           </Button>
         </div>
       </CardContent>

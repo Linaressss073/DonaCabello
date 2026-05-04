@@ -42,6 +42,13 @@ export const updateCenterStatus = (id: string, status: "pending" | "verified" | 
 export const getCampaigns = () =>
   api.get("/campaigns").then((r) => r.data);
 
+export const getCampaignById = (id: string) =>
+  api.get(`/campaigns/${id}`).then((r) => r.data);
+
+// Centers (detail)
+export const getCenterById = (id: string) =>
+  api.get(`/centers/${id}`).then((r) => r.data);
+
 // Community
 export const getFaqs = () =>
   api.get("/community/faqs").then((r) => r.data);
