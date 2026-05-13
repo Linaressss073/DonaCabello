@@ -29,6 +29,9 @@ export const refreshToken = (token: string) =>
 export const getCenters = () =>
   api.get("/centers").then((r) => r.data);
 
+export const getCenterById = (id: string) =>
+  api.get(`/centers/${id}`).then((r) => r.data);
+
 export const registerCenter = (data: object) =>
   api.post("/centers/register", data).then((r) => r.data);
 
@@ -45,9 +48,29 @@ export const getCampaigns = () =>
 export const getCampaignById = (id: string) =>
   api.get(`/campaigns/${id}`).then((r) => r.data);
 
-// Centers (detail)
-export const getCenterById = (id: string) =>
-  api.get(`/centers/${id}`).then((r) => r.data);
+export const createCampaign = (data: {
+  title: string;
+  description?: string;
+  imageUrl?: string;
+  centerId: string;
+  startDate?: string;
+  endDate?: string;
+  goal?: number;
+}) => api.post("/campaigns", data).then((r) => r.data);
+
+export const updateCampaign = (id: string, data: {
+  title?: string;
+  description?: string;
+  imageUrl?: string;
+  startDate?: string;
+  endDate?: string;
+  goal?: number;
+  current?: number;
+  active?: boolean;
+}) => api.patch(`/campaigns/${id}`, data).then((r) => r.data);
+
+export const deleteCampaign = (id: string) =>
+  api.delete(`/campaigns/${id}`).then((r) => r.data);
 
 // Community
 export const getFaqs = () =>
@@ -56,7 +79,6 @@ export const getFaqs = () =>
 export const sendContact = (data: { name: string; email: string; message: string }) =>
   api.post("/community/contact", data).then((r) => r.data);
 
-// Community
 export const getMyths = () =>
   api.get("/community/myths").then((r) => r.data);
 

@@ -24,6 +24,11 @@ export class AppointmentsController {
     return this.getMyAppointmentsUseCase.execute(user.id);
   }
 
+  @Get('center/my')
+  getCenterAppointments(@GetUser() user: any) {
+    return this.getCenterAppointmentsUseCase.execute(user.id);
+  }
+
   @Post()
   create(@Body() dto: CreateAppointmentDto, @GetUser() user: any) {
     return this.createAppointmentUseCase.execute({
@@ -40,13 +45,7 @@ export class AppointmentsController {
   }
 
   @Patch(':id/cancel')
-  cancel(@Param('id') id: string) {
-    return this.cancelAppointmentUseCase.execute(id);
-  }
-
-  // Ruta estática ANTES que las dinámicas
-  @Get('center/my')
-  getCenterAppointments(@GetUser() user: any) {
-    return this.getCenterAppointmentsUseCase.execute(user.id);
+  cancel(@Param('id') id: string, @GetUser() user: any) {
+    return this.cancelAppointmentUseCase.execute(id, user.id);
   }
 }

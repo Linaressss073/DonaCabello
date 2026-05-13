@@ -27,5 +27,6 @@ import { UPDATE_CENTER_STATUS_PORT } from './domain/ports/in/update-center-statu
     { provide: REGISTER_CENTER_PORT, useClass: RegisterCenterUseCase },
     { provide: UPDATE_CENTER_STATUS_PORT, useClass: UpdateCenterStatusUseCase },
   ],
+  exports: [CENTERS_REPOSITORY_PORT],
 })
 export class CentersModule {}

@@ -13,13 +13,32 @@ export class MongooseCampaignsRepository implements CampaignsRepositoryPort {
   ) {}
 
   async findAll(): Promise<CampaignEntity[]> {
-    const docs = await this.campaignModel.find().exec();
+    const docs = await this.campaignModel.find().sort({ createdAt: -1 }).exec();
     return docs.map((d) => this.toEntity(d));
   }
 
   async findById(id: string): Promise<CampaignEntity | null> {
     const doc = await this.campaignModel.findById(id).exec();
     return doc ? this.toEntity(doc) : null;
+  }
+
+  async findByCenterId(centerId: string): Promise<CampaignEntity[]> {
+    const docs = await this.campaignModel.find({ centerId }).sort({ createdAt: -1 }).exec();
+    return docs.map((d) => this.toEntity(d));
+  }
+
+  async save(campaign: Partial<CampaignEntity>): Promise<CampaignEntity> {
+    const created = await this.campaignModel.create(campaign);
+    return this.toEntity(created);
+  }
+
+  async update(id: string, partial: Partial<CampaignEntity>): Promise<CampaignEntity> {
+    const doc = await this.campaignModel.findByIdAndUpdate(id, partial, { new: true }).exec();
+    return this.toEntity(doc!);
+  }
+
+  async delete(id: string): Promise<void> {
+    await this.campaignModel.findByIdAndDelete(id).exec();
   }
 
   private toEntity(doc: CampaignDocument): CampaignEntity {
