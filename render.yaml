@@ -2,7 +2,7 @@ services:
   - type: web
     name: dona-cabello-api
     runtime: node
-    buildCommand: cd backend && npm install -g pnpm && pnpm install --frozen-lockfile && pnpm run build
+    buildCommand: cd backend && npm install -g pnpm && pnpm install --no-frozen-lockfile && pnpm run build
     startCommand: cd backend && pnpm run start:prod
     envVars:
       - key: NODE_ENV
